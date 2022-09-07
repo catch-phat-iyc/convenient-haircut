@@ -1,0 +1,19 @@
+﻿@using Admin.Haircut.Business.Core
+
+<select class="js-example-placeholder-multiple col-sm-12" name="Position" multiple="multiple>
+    @foreach (AppEnums.Position item in (AppEnums.Position[]) Enum.GetValues(typeof(AppEnums.Position)))
+    {
+        if(item == Model)
+        {
+            <option value="@item" selected>
+                @item.GetDescription()
+            </option>
+        }
+        else
+        {
+            <option value="@item">
+                @item.GetDescription()
+            </option>
+        }
+    }
+</select>

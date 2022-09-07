@@ -1,5 +1,7 @@
 ﻿using Admin.Haircut.ApiControllers.Base;
 using Admin.Haircut.Business.Models.Base;
+using Admin.Haircut.Business.Models.Employee;
+using Admin.Haircut.Business.Models.Employee.ResponseModel;
 using Admin.Haircut.Business.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +43,13 @@ namespace Admin.Haircut.ApiControllers
             var model = await _employeeService.GetAll(request);
 
             return Ok(model);
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> Create(EmployeeCreateRequestModel model)
+        {
+            var result = await _employeeService.Add(model);
+            return Ok(result);
         }
     }
 }

@@ -1,0 +1,19 @@
+﻿@using Admin.Haircut.Business.Core
+
+<select class="form-control btn-square sex-option" name="Gender">
+    @foreach (AppEnums.Gender item in (AppEnums.Gender[]) Enum.GetValues(typeof(AppEnums.Gender)))
+    {
+        if(item == Model)
+        {
+            <option value="@item" selected>
+                @item.GetDescription()
+            </option>
+        }
+        else
+        {
+            <option value="@item">
+                @item.GetDescription()
+            </option>
+        }
+    }
+</select>

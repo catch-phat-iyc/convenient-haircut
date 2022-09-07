@@ -1,5 +1,6 @@
-﻿@using Admin.Haircut.Business.Models.Base
-@using Admin.Haircut.Business.Models.Employee
+﻿@using Admin.Haircut.Business.Models.Base;
+@using Admin.Haircut.Business.Models.Employee;
+@using Admin.Haircut.Business.Core;
 
 @model PagingResult<EmployeeModel>;
 
@@ -41,28 +42,114 @@
     <!-- Container-fluid starts-->
     <div class="container-fluid">
         <div class="row">
+            <div class="col-md-12 project-list">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-6 p-0">
+                            <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-bs-toggle="tab" href="#top-home" role="tab" aria-controls="top-home" aria-selected="true"><i data-feather="target"></i>Tất cả</a></li>
+                                <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-bs-toggle="tab" href="#top-profile" role="tab" aria-controls="top-profile" aria-selected="false"><i data-feather="info"></i>Doing</a></li>
+                                <li class="nav-item"><a class="nav-link" id="contact-top-tab" data-bs-toggle="tab" href="#top-contact" role="tab" aria-controls="top-contact" aria-selected="false"><i data-feather="check-circle"></i>Done</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 p-0">
+                            <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployee"> <i data-feather="plus-square"> </i>Tạo mới</a>
+                            <div class="modal fade modal-bookmark" id="addEmployee" tabindex="-1" role="dialog" aria-labelledby="addEmployeeLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addEmployeeLabel">Tạo mới</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form theme-form" novalidate id="create_form">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="exampleFormControlInput1">Họ tên</label>
+                                                                <input class="form-control" 
+                                                                    name="FullName" type="text" 
+                                                                    placeholder="Nhập họ tên" 
+                                                                    data-msg-required="Bạn chưa điền họ tên" 
+                                                                    data-msg-required-1="Họ tên hợp lệ" 
+                                                                    required
+                                                                >
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="exampleFormControlInput1">Tên tài khoản</label>
+                                                                <input class="form-control" 
+                                                                    name="Username" type="text" 
+                                                                    placeholder="Nhập tên tài khoản" 
+                                                                    minlength="5" maxlength="10" 
+                                                                    data-msg-required="Bạn chưa điền tên tài khoản" 
+                                                                    data-msg-required-1="Tài khoản hợp lệ" 
+                                                                    required
+                                                                >
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="exampleInputPassword2">Mật khẩu</label>
+                                                                <input class="form-control" 
+                                                                    name="Password" type="password" 
+                                                                    placeholder="Nhập mật khẩu" 
+                                                                    data-msg-required="Bạn chưa điền mật khẩu" 
+                                                                    data-msg-required-1="Mật khẩu hợp lệ" 
+                                                                    required
+                                                                >
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer text-end">
+                                                    <button class="btn btn-primary" type="submit">Tạo mới</button>
+                                                    <input class="btn btn-light" type="reset" value="Hủy bỏ">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">                       
+                    <div class="card-header">
                     </div>
                     <div class="table-responsive">
                         <table class="table table-de">
                             <thead>
                                 <tr>
+                                    <th scope="col">Mã</th>
                                     <th scope="col">Họ tên</th>
+                                    <th scope="col">Giới tính</th>
                                     <th scope="col">Ngày sinh</th>
-                                    <th scope="col">Địa chỉ</th>
                                     <th scope="col">Điện thoại</th>
+                                    <th scope="col">Ngày bắt đầu</th>
+                                    <th scope="col">Tài khoản</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.Items)
                                 {
                                     <tr>
+                                        <td>@item.Id</td>
                                         <td>@item.FullName</td>
-                                        <td>@item.Birthday.ToString("dd/MM/yyyy")</td>
-                                        <td>@item.Address</td>
+                                        <td>@item.Gender</td>
+                                        <td>@item.Birthday.FormatDate()</td>
                                         <td>@item.Phone</td>
+                                        <td>@item.StartingDate.FormatDate()</td>
+                                        <td>@item.Username</td>
                                     </tr>
                                 }
                             </tbody>
@@ -74,3 +161,92 @@
     </div>
     <!-- Container-fluid Ends-->
 </div>
+
+@section Scripts{
+    <script>
+        $(function() {
+            const form1 = $('#create_form');
+
+            Array.prototype.filter.call(form1, function(form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    form.classList.add('was-validated');
+
+                    var list1 = form.querySelectorAll(':valid');
+                    for (var item of list1) {
+                        var ddd = $(item).data("msg-required-1");
+                        $(item).next("label").removeAttr("class").addClass("valid-feedback").html(ddd);
+                    }
+
+                    if (form.checkValidity() === true) {
+                        var formData = new FormData();
+
+                        var otherData = $(form).serializeArray();
+                        $.each(otherData || [],
+                            function(key, item) {
+                                formData.append(item.name, item.value);
+                            });
+
+                        var object = {};
+                        formData.forEach((value, key) => { object[key] = value });
+
+                        $.ajax({
+                            url: '@Url.Action("Create", "EmployeeApi")',
+                            type: "POST",
+                            data: JSON.stringify(object),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                alert(response);
+                                window.location.href = '@Url.Action("Add", "Employee")';
+                            },
+                            error: function(response) {
+                                alert(response.responseJSON.message);
+                            }
+                        });
+                    } else {
+                        var list = form.querySelectorAll(':invalid');
+                        for (var item of list) {
+                            var ddd = $(item).data("msg-required");
+                            $(item).next("label").removeAttr("class").addClass("invalid-feedback").html(ddd);
+                        }
+                    }
+                }, false);
+            });
+
+            //var button = $(form).find("button[type='submit']");
+
+            //button.on('click', function(e) {
+            //    e.preventDefault();
+
+            //    var formData = new FormData();
+
+            //    var otherData = $(form).serializeArray();
+            //    $.each(otherData || [],
+            //        function(key, item) {
+            //            formData.append(item.name, item.value);
+            //        });
+
+            //    var object = {};
+            //    formData.forEach((value, key) => { object[key] = value });
+
+            //    $.ajax({
+            //        url: '@Url.Action("Create", "EmployeeApi")',
+            //        type: "POST",
+            //        data: JSON.stringify(object),
+            //        contentType: 'application/json',
+            //        success: function(response) {
+            //            alert(response);
+            //            window.location.href = '@Url.Action("Add", "Employee")';
+            //        },
+            //        error: function(response) {
+            //            alert(response.responseJSON.message);
+            //        }
+            //    });
+            //});
+        })
+    </script>
+}
+
+    @section Head{
+
+}

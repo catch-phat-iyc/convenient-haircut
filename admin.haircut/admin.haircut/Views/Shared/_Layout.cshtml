@@ -34,6 +34,8 @@
     <link id="color" rel="stylesheet" href="~/assets/css/color-1.css" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="~/assets/css/responsive.css">
+
+    @await RenderSectionAsync("Head", required: false)
   </head>
   <body>
     <!-- Loader starts-->
@@ -76,5 +78,7 @@
     <script src="~/assets/js/theme-customizer/customizer.js"></script>
     <!-- login js-->
     <!-- Plugin used-->
+
+    @await RenderSectionAsync("Scripts", required: false)
   </body>
 </html>

@@ -1,4 +1,5 @@
 ﻿using Admin.Haircut.Business.Models.Base;
+using Admin.Haircut.Business.Models.Employee;
 using Admin.Haircut.Business.Service.Interfaces;
 using Admin.Haircut.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace Admin.Haircut.Controllers
             var checkPageSize = long.TryParse(pageSize, out long newPageSize);
             if (checkPageSize == false)
             {
-                newPageSize = 10;
+                newPageSize = 100;
             };
 
             var request = new TableRequest
@@ -40,6 +41,12 @@ namespace Admin.Haircut.Controllers
 
             var model = await _employeeService.GetAll(request);
             return View(model);
+        }
+
+        [Route("add")]
+        public async Task<IActionResult> Add()
+        {
+            return View();
         }
     }
 }

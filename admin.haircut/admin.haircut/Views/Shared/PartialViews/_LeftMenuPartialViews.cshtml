@@ -31,9 +31,18 @@
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav" asp-controller="Dashboard" asp-action="Index"><i data-feather="git-pull-request"></i><span>Dashboard</span></a>
                     </li>
-                    <li class="dropdown">
-                        <a class="nav-link menu-title link-nav" asp-controller="Employee" asp-action="Index"><i data-feather="git-pull-request"></i><span>Employee</span></a>
-                    </li>
+
+                    <li class="sidebar-main-title">
+                    <div>
+                      <h6>QUẢN LÝ NHÂN VIÊN             </h6>
+                    </div>
+                  </li>
+                  <li class="dropdown"><a class="nav-link menu-title" href="javascript:void(0)"><i data-feather="box"></i><span>Danh sách</span></a>
+                    <ul class="nav-submenu menu-content">
+                      <li><a asp-controller="Employee" asp-action="Index">Nhân viên</a></li>
+                      <li><a asp-controller="Employee" asp-action="Add">Tạo mới nhân viên</a></li>
+                    </ul>
+                  </li>
                 </ul>
             </div>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>

@@ -46,12 +46,14 @@ namespace Admin.Haircut.Business.Core
             [Description("405 - Bạn không có quyền.")] MethodNotAllowed,
         }
 
-        public enum Status
+        public enum Position
         {
-            [Description("NoCheckIn")] NoCheckIn = 0,
-            [Description("CheckIn")] CheckIn = 1,
-            [Description("CheckOut")] CheckOut = 2,
-            [Description("Closed")] Closed = 3,
+            [Description("Quản lý salon")] Manager,
+            [Description("Stylist - thợ cắt")] Clipper,
+            [Description("Skinner - thợ gội")] Hairdresser,
+            [Description("Lễ tân")] Receptionist,
+            [Description("Bảo vệ salon")] SecurityGuard,
+            [Description("Kế toán")] Accounting,
         }
         public enum RoomStatus
         {
@@ -60,11 +62,11 @@ namespace Admin.Haircut.Business.Core
             [Description("Maintenance")] Maintenance = 2
         }
 
-        public enum Sex
+        public enum Gender
         {
-            [Description("Female")] Female = 0,
-            [Description("Male")] Male = 1,
-            [Description("Other")] Other = 2
+            [Description("Nữ")] Female = 0,
+            [Description("Nam")] Male = 1,
+            [Description("Khác")] Other = 2
         }
 
         public enum Button
