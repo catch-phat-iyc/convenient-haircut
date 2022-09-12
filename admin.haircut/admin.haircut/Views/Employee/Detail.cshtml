@@ -1,7 +1,9 @@
 ﻿@using Admin.Haircut.Business.Models.Base;
 @using Admin.Haircut.Business.Models.Employee;
+@using Admin.Haircut.Business.Models.Employee.ResponseModel;
 @using Admin.Haircut.Business.Core;
 
+@model EmployeeInfoResponse;
 
 <div class="page-body">
     <div class="container-fluid">
@@ -45,7 +47,7 @@
                 <div class="col-xl-8">
                     <form class="card" id="modal_update_employee">
                         <div class="card-header pb-0">
-                            <h4 class="card-title mb-0">Thông tin cá nhân</h4>
+                            <h4 class="card-title mb-0">Thông tin cá nhân: @ViewBag.Test11</h4>
                             <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
                         </div>
                         <div class="card-body">
@@ -53,67 +55,55 @@
                             <div class="col-md-6">
                               <div class="mb-3">
                                 <label class="form-label">Họ tên</label>
-                                <input class="form-control" type="text" placeholder="Họ tên" name="FullName">
+                                <input class="form-control" type="text" placeholder="Họ tên" name="FullName" value="@Model.FullName" />
                               </div>
                             </div>
                             <div class="col-sm-6 col-md-3">
                               <div class="mb-3">
                                 <label class="form-label">Giới tính</label>
-                                @await Component.InvokeAsync("GenderOption")
+                                @await Component.InvokeAsync("GenderOption", new {gender = Model.Gender})
                               </div>
                             </div>
                             <div class="col-sm-6 col-md-3">
                               <div class="mb-3">
                                 <label class="form-label">Ngày sinh</label>
-                                <input class="form-control digits" type="date" value="" name="Birthday">
+                                <input class="form-control digits" type="date" name="Birthday" value="@Model.Birthday">
                               </div>
                             </div>
                             <div class="col-sm-12">
                               <div class="mb-3">
                                 <label class="form-label">Địa chỉ</label>
-                                <input class="form-control" type="text" placeholder="Địa chỉ" name="Address">
+                                <input class="form-control" type="text" placeholder="Địa chỉ" name="Address" value="@Model.Address">
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="mb-3">
                                 <label class="form-label">Số điện thoại</label>
-                                <input class="form-control" type="text" placeholder="Số điện thoại" name="Phone">
+                                <input class="form-control" type="text" placeholder="Số điện thoại" name="Phone" value="@Model.Phone">
                               </div>
                             </div>
                             <div class="col-md-6">
                               <div class="mb-3">
                                 <label class="form-label">Vị trí</label>
-                                @await Component.InvokeAsync("PositionOption")
+                                @await Component.InvokeAsync("PositionOption", new {id = Model.Id})
                               </div>
                             </div>
                             <div class="col-sm-6 col-md-3">
                               <div class="mb-3">
                                 <label class="form-label">Ngày bắt đầu</label>
-                                <input class="form-control digits" type="date" value="" name="StartingDate">
+                                <input class="form-control digits" type="date" name="StartingDate" value="@Model.StartingDate">
                               </div>
                             </div>
                             <div class="col-sm-6 col-md-3">
                               <div class="mb-3">
                                 <label class="form-label">Ngày kết thúc</label>
-                                <input class="form-control digits" type="date" value="">
+                                <input class="form-control digits" type="date" value="@Model.EndingDate">
                               </div>
-                            </div>
-                            <div class="col-md-12">
-                              <div class="mb-3">
-                                <label class="form-label">Tên tài khoản</label>
-                                <input class="form-control" type="text" placeholder="Tên tài khoản" name="Username">
-                              </div>
-                            </div>
-                            <div class="col-md-12">
-                              <div class="mb-3">
-                                <label class="form-label">Mật khẩu</label>
-                                <input class="form-control" type="password" placeholder="Mật khẩu" name="Password">
-                              </div>
-                            </div>                        
+                            </div>                       
                             <div class="col-md-12">
                               <div>
                                 <label class="form-label">Ghi chú</label>
-                                <textarea class="form-control" rows="5" placeholder="Ghi chú" name="Note"></textarea>
+                                <textarea class="form-control" rows="5" placeholder="Ghi chú" name="Note">@Model.Note</textarea>
                               </div>
                             </div>
                           </div>
@@ -135,9 +125,9 @@
                                 <div class="row mb-2">
                                     <div class="profile-title">
                                         <div class="media">
-                                            <img class="img-70 rounded-circle" alt="" src="../assets/images/user/7.jpg">
+                                            <img class="img-70 rounded-circle" alt="" src="@Model.Avatar" />
                                             <div class="media-body">
-                                                <h3 class="mb-1 f-20 txt-primary">MARK JECNO</h3>
+                                                <h3 class="mb-1 f-20 txt-primary">@Model.FullName</h3>
                                                 <p class="f-12">DESIGNER</p>
                                             </div>
                                         </div>
@@ -148,19 +138,19 @@
                                     <textarea class="form-control" rows="5">On the other hand, we denounce with righteous indignation</textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Email-Address</label>
-                                    <input class="form-control" placeholder="your-email@domain.com">
+                                    <label class="form-label">Tên tài khoản</label>
+                                    <input class="form-control" placeholder="your-email@domain.com" value="@Model.Username">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input class="form-control" type="password" value="password">
+                                    <label class="form-label">Mật khẩu</label>
+                                    <input class="form-control" type="password" value="@Model.Password.Trim()">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Website</label>
                                     <input class="form-control" placeholder="http://Uplor .com">
                                 </div>
                                 <div class="form-footer">
-                                    <button class="btn btn-primary btn-block">Save</button>
+                                    <button class="btn btn-primary btn-block">Lưu</button>
                                 </div>
                             </form>
                         </div>
@@ -181,18 +171,6 @@
             $(".js-example-placeholder-multiple").select2({
                 placeholder: "--Chọn vị trí--",
             });  
-            
-            const form = $('#modal_update_employee');
-
-            var otherData = $(form).serializeArray();
-                    $.each(otherData || [],
-                        function(key, item) {
-                            formData.append(item.name, item.value);
-                        });
-
-            var object = {};
-            formData.forEach((value, key) => { object[key] = value }); 
-                     
         });
     </script>
 }

@@ -8,6 +8,12 @@ namespace Admin.Haircut.Business.Service.Interfaces
     {
         Task<PagingResult<EmployeeModel>> GetAll(TableRequest request);
         Task<long> Add(EmployeeCreateRequestModel model);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">id Employee</param>
+        /// <returns></returns>
+        Task<EmployeeInfoResponse> Get(long id);
+        Task<EmployeeUpdateResponseModel> Update( EmployeeUpdateRequestModel model);
     }
 }

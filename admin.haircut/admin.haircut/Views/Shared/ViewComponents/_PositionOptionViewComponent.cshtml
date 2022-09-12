@@ -1,19 +1,17 @@
 ﻿@using Admin.Haircut.Business.Core
+@using Admin.Haircut.Business.Models.Rule
+@model List<RuleModel>;
+@{
+    var ruleEmployee = (List<RuleResponse>)ViewBag.RuleEmployee;
+}
 
-<select class="js-example-placeholder-multiple col-sm-12" name="Position" multiple="multiple>
-    @foreach (AppEnums.Position item in (AppEnums.Position[]) Enum.GetValues(typeof(AppEnums.Position)))
+<select class="js-example-placeholder-multiple col-sm-12" name="Position" multiple="multiple">
+    @foreach (var item in Model)
     {
-        if(item == Model)
-        {
-            <option value="@item" selected>
-                @item.GetDescription()
-            </option>
-        }
-        else
-        {
-            <option value="@item">
-                @item.GetDescription()
-            </option>
+        if(ruleEmployee.Any(x => x.IdRule == item.Id)){
+            <option value="@item.Id" selected>@item.FullName</option>
+        }else{
+            <option value="@item.Id">@item.FullName</option>
         }
     }
 </select>

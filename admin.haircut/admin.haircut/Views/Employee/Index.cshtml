@@ -70,7 +70,7 @@
                                                                 <input class="form-control" 
                                                                     name="FullName" type="text" 
                                                                     placeholder="Nhập họ tên" 
-                                                                    data-msg-required="Bạn chưa điền họ tên" 
+                                                                    data-msg-required="Họ tên không được để trống!" 
                                                                     data-msg-required-1="Họ tên hợp lệ" 
                                                                     required
                                                                 >
@@ -86,7 +86,7 @@
                                                                     name="Username" type="text" 
                                                                     placeholder="Nhập tên tài khoản" 
                                                                     minlength="5" maxlength="10" 
-                                                                    data-msg-required="Bạn chưa điền tên tài khoản" 
+                                                                    data-msg-required="Tên tài khoản không được để trống!" 
                                                                     data-msg-required-1="Tài khoản hợp lệ" 
                                                                     required
                                                                 >
@@ -101,10 +101,11 @@
                                                                 <input class="form-control" 
                                                                     name="Password" type="password" 
                                                                     placeholder="Nhập mật khẩu" 
-                                                                    data-msg-required="Bạn chưa điền mật khẩu" 
+                                                                    data-msg-required="Mật khẩu không được để trống!" 
                                                                     data-msg-required-1="Mật khẩu hợp lệ" 
                                                                     required
                                                                 >
+                                                                <label></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -124,8 +125,6 @@
             </div>
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="table-responsive">
                         <table class="table table-de">
                             <thead>
@@ -137,6 +136,7 @@
                                     <th scope="col">Điện thoại</th>
                                     <th scope="col">Ngày bắt đầu</th>
                                     <th scope="col">Tài khoản</th>
+                                    <th scope="col">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -150,6 +150,11 @@
                                         <td>@item.Phone</td>
                                         <td>@item.StartingDate.FormatDate()</td>
                                         <td>@item.Username</td>
+                                        <td>
+                                            <a class="btn-detail-info" asp-controller="Employee" asp-action="Detail" asp-route-id="@item.Id"><i data-feather="user"></i></a>
+                                            <i data-feather="more-vertical"></i>
+                                            <button class="btn-delete-user" id=@item.Id><i data-feather="trash-2"></i></button>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -165,6 +170,7 @@
 @section Scripts{
     <script>
         $(function() {
+
             const form1 = $('#create_form');
 
             Array.prototype.filter.call(form1, function(form) {
@@ -172,10 +178,10 @@
                     event.preventDefault();
                     form.classList.add('was-validated');
 
-                    var list1 = form.querySelectorAll(':valid');
-                    for (var item of list1) {
-                        var ddd = $(item).data("msg-required-1");
-                        $(item).next("label").removeAttr("class").addClass("valid-feedback").html(ddd);
+                    var result = form.querySelectorAll(':valid');
+                    for (var item of result) {
+                        var msg = $(item).data("msg-required-1");
+                        $(item).next("label").removeAttr("class").addClass("valid-feedback").html(msg);
                     }
 
                     if (form.checkValidity() === true) {
@@ -206,8 +212,8 @@
                     } else {
                         var list = form.querySelectorAll(':invalid');
                         for (var item of list) {
-                            var ddd = $(item).data("msg-required");
-                            $(item).next("label").removeAttr("class").addClass("invalid-feedback").html(ddd);
+                            var msg = $(item).data("msg-required");
+                            $(item).next("label").removeAttr("class").addClass("invalid-feedback").html(msg);
                         }
                     }
                 }, false);
@@ -243,10 +249,27 @@
             //        }
             //    });
             //});
-        })
+        });
     </script>
 }
 
-    @section Head{
-
+@section Head{
+    <style>
+        .btn-detail-info {
+            border-style: none;
+            background: white;
+            border-color: #e6edef;
+        }
+        .btn-detail-info:hover {
+            background-color: gainsboro
+        }
+        .btn-delete-user {
+            border-style: none;
+            background: white;
+            border-color: #e6edef;
+        }
+        .btn-delete-user:hover{
+            background-color: gainsboro
+        }
+    </style>
 }

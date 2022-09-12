@@ -105,6 +105,46 @@ namespace Admin.Haircut.Business.Service
                 await sqlConnection.CloseAsync();
             }
         }
-      
+        
+        public async Task<EmployeeInfoResponse?> Get(long id)
+        {
+            await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+            try
+            {
+                #region get data of employee
+
+                string query = $@"SELECT * FROM [Employee] where [Id] = @Id";
+
+                var result = await sqlConnection.QueryFirstOrDefaultAsync<EmployeeInfoResponse>(query, new
+                {
+                    Id = id
+                });
+
+                return result;
+
+                #endregion
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+        } 
+
+        //public async Task<EmployeeUpdateResponseModel> Update(EmployeeUpdateRequestModel model)
+        //{
+        //    await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+        //    try
+        //    {
+        //        #region update employee info
+
+        //        var request = await sqlConnection.<EmployeeUpdateRequestModel> ()
+
+        //        #endregion
+        //    }
+        //    finally
+        //    {
+        //        await sqlConnection.CloseAsync();
+        //    }
+        //}
     }
 }

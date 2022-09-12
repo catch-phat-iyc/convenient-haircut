@@ -24,6 +24,7 @@ configuration.Bind(new Configurations());
 builder.Services.AddMemoryCache();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IRuleService, RuleService>();
 #endregion
 
 // Add services to the container.

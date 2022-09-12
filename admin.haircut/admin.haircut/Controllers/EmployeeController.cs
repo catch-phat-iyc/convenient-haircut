@@ -48,5 +48,12 @@ namespace Admin.Haircut.Controllers
         {
             return View();
         }
+
+        [Route("{id}")]
+        public async Task<IActionResult> Detail(long id)
+        {
+            var model = await _employeeService.Get(id);
+            return View(model);
+        }
     }
 }
