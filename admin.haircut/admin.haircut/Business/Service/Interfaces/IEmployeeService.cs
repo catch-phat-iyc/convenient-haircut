@@ -14,6 +14,7 @@ namespace Admin.Haircut.Business.Service.Interfaces
         /// <param name="id">id Employee</param>
         /// <returns></returns>
         Task<EmployeeInfoResponse> Get(long id);
-        Task<EmployeeUpdateResponseModel> Update( EmployeeUpdateRequestModel model);
+        Task Update(EmployeeUpdateRequestModel model);
+        Task Delete(long Id);
     }
 }

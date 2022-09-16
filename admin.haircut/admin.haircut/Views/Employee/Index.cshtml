@@ -126,7 +126,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="table-responsive">
-                        <table class="table table-de">
+                        <table class="table table-de" id="tblEmployee">
                             <thead>
                                 <tr>
                                     <th scope="col">Mã</th>
@@ -140,20 +140,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Items)
+                                @foreach (var item in Model.Items.Select((value, i) => ( value, i )))
                                 {
                                     <tr>
-                                        <td>@item.Id</td>
-                                        <td>@item.FullName</td>
-                                        <td>@item.Gender</td>
-                                        <td>@item.Birthday.FormatDate()</td>
-                                        <td>@item.Phone</td>
-                                        <td>@item.StartingDate.FormatDate()</td>
-                                        <td>@item.Username</td>
+                                        <td>@item.value.Id</td>
+                                        <td>@item.value.FullName</td>
+                                        <td>@item.value.Gender</td>
+                                        <td>@item.value.Birthday.FormatDate()</td>
+                                        <td>@item.value.Phone</td>
+                                        <td>@item.value.StartingDate.FormatDate()</td>
+                                        <td>@item.value.Username</td>
                                         <td>
-                                            <a class="btn-detail-info" asp-controller="Employee" asp-action="Detail" asp-route-id="@item.Id"><i data-feather="user"></i></a>
-                                            <i data-feather="more-vertical"></i>
-                                            <button class="btn-delete-user" id=@item.Id><i data-feather="trash-2"></i></button>
+                                            <a class="btn btn-iconsolid" asp-controller="Employee" asp-action="Detail" asp-route-id="@item.value.Id"><i class="fa fa-user-o"></i></a>                           
+                                            <button class="btn btn-iconsolid bg-danger" onclick="deleteEmployee(this, @item.value.Id)"><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -167,7 +166,26 @@
     <!-- Container-fluid Ends-->
 </div>
 
+
 @section Scripts{
+    <script>
+        function deleteEmployee(e, id) {
+
+                var tr = $(e).closest("tr");
+
+                $.ajax({
+                    url: '@Url.Action("Delete", "EmployeeApi")?id=' + id,
+                    type: "DELETE",
+                    contentType: 'application/json',
+                    success: function(response) {
+                        tr.remove();
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.message);
+                    }
+                });
+            }    
+    </script>
     <script>
         $(function() {
 
@@ -218,57 +236,36 @@
                     }
                 }, false);
             });
-
-            //var button = $(form).find("button[type='submit']");
-
-            //button.on('click', function(e) {
-            //    e.preventDefault();
-
-            //    var formData = new FormData();
-
-            //    var otherData = $(form).serializeArray();
-            //    $.each(otherData || [],
-            //        function(key, item) {
-            //            formData.append(item.name, item.value);
-            //        });
-
-            //    var object = {};
-            //    formData.forEach((value, key) => { object[key] = value });
-
-            //    $.ajax({
-            //        url: '@Url.Action("Create", "EmployeeApi")',
-            //        type: "POST",
-            //        data: JSON.stringify(object),
-            //        contentType: 'application/json',
-            //        success: function(response) {
-            //            alert(response);
-            //            window.location.href = '@Url.Action("Add", "Employee")';
-            //        },
-            //        error: function(response) {
-            //            alert(response.responseJSON.message);
-            //        }
-            //    });
-            //});
         });
     </script>
 }
 
 @section Head{
     <style>
-        .btn-detail-info {
-            border-style: none;
-            background: white;
-            border-color: #e6edef;
+        .a-link:link, .a-link:visited {
+          background-color: white;
+          width: 30px;
+          height: 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          border-radius: 5px;
+          padding-top: 4px;
         }
-        .btn-detail-info:hover {
-            background-color: gainsboro
+        .a-link:hover, .a-link:active {
+          background-color: gainsboro
         }
-        .btn-delete-user {
-            border-style: none;
-            background: white;
-            border-color: #e6edef;
+        .btn-delete-user:link, .btn-delete-user:visited {
+            background-color: white;
+            width: 30px;
+            height: 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+            padding-top: 4px;
         }
-        .btn-delete-user:hover{
+        .btn-delete-user:hover, .btn-delete-user:active{
             background-color: gainsboro
         }
     </style>

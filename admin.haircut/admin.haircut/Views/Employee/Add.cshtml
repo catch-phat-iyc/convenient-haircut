@@ -180,19 +180,7 @@
 
             $(".js-example-placeholder-multiple").select2({
                 placeholder: "--Chọn vị trí--",
-            });  
-            
-            const form = $('#modal_update_employee');
-
-            var otherData = $(form).serializeArray();
-                    $.each(otherData || [],
-                        function(key, item) {
-                            formData.append(item.name, item.value);
-                        });
-
-            var object = {};
-            formData.forEach((value, key) => { object[key] = value }); 
-                     
+            });                      
         });
     </script>
 }

@@ -5,7 +5,7 @@
     var ruleEmployee = (List<RuleResponse>)ViewBag.RuleEmployee;
 }
 
-<select class="js-example-placeholder-multiple col-sm-12" name="Position" multiple="multiple">
+<select class="select2-rule-multiple col-sm-12" multiple="multiple" required>
     @foreach (var item in Model)
     {
         if(ruleEmployee.Any(x => x.IdRule == item.Id)){
@@ -15,3 +15,11 @@
         }
     }
 </select>
+
+<script>
+    $(function() {
+        $(".select2-rule-multiple").select2({
+            placeholder: "--Chọn vị trí--",
+        });
+    })
+</script>

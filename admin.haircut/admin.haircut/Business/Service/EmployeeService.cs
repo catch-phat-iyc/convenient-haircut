@@ -23,12 +23,6 @@ namespace Admin.Haircut.Business.Service
                                 order by [Status] ASC
                                 OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
 
-                //Join 3 table to get list rule of employee
-                //string query = @"select [Employee].[FullName],[Employee].[Birthday],[Employee].[Phone], [Rule].[FullName],[Employee].[Address] from [Employee] 
-                //                left join [Employee_Rule] on [Employee].[Id] = [Employee_Rule].[IdEmployee]
-                //                left join [Rule] on [Rule].[Id] = [Employee_Rule].[IdRule]
-                //                ";
-
                 var data = (await connection.QueryAsync<EmployeeModel>(query, new
                 {
                     Skip = skip,
@@ -106,7 +100,7 @@ namespace Admin.Haircut.Business.Service
             }
         }
         
-        public async Task<EmployeeInfoResponse?> Get(long id)
+        public async Task<EmployeeInfoResponse> Get(long id)
         {
             await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
             try
@@ -128,23 +122,68 @@ namespace Admin.Haircut.Business.Service
             {
                 await sqlConnection.CloseAsync();
             }
-        } 
+        }
 
-        //public async Task<EmployeeUpdateResponseModel> Update(EmployeeUpdateRequestModel model)
-        //{
-        //    await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
-        //    try
-        //    {
-        //        #region update employee info
+        public async Task Update(EmployeeUpdateRequestModel model)
+        {
+            var employee = await Get(model.Id);
+            if(employee == null)
+            {
+                throw new AppException("Dữ liệu không được tìm thấy!");
+            }
+            await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+            try
+            {
+                #region update employee info
 
-        //        var request = await sqlConnection.<EmployeeUpdateRequestModel> ()
+                string query = @$"UPDATE [Employee] SET
+                                [FullName] = @FullName,
+                                [Birthday] = @Birthday,
+                                [Address] = @Address,
+                                [Phone] = @Phone,
+                                [StartingDate] = @StartingDate,
+                                [EndingDate] = @EndingDate,
+                                [Gender] = @Gender,
+                                [Note] = @Note
+                                WHERE [Id] = @Id";
 
-        //        #endregion
-        //    }
-        //    finally
-        //    {
-        //        await sqlConnection.CloseAsync();
-        //    }
-        //}
+                await sqlConnection.ExecuteAsync(query, new
+                {
+                    FullName = model.FullName,
+                    Birthday = model.Birthday,
+                    Address = model.Address,
+                    Phone = model.Phone,
+                    StartingDate = model.StartingDate,
+                    EndingDate = model.EndingDate,
+                    Gender = model.Gender,
+                    Note = model.Note,
+                    Id = model.Id
+                    //IssueDate = model.IssueDate.ToLocalTime(),
+                    //IssueBy = model.IssueBy
+                });
+                #endregion
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+        }
+        public async Task Delete(long Id)
+        {
+            await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+            try
+            {
+                string query = @$"DELETE FROM [Employee]
+                                 WHERE [Id] = @Id";
+                await sqlConnection.ExecuteAsync(query, new
+                {
+                    Id = Id
+                });
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+        }
     }
 }

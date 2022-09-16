@@ -45,11 +45,23 @@ namespace Admin.Haircut.ApiControllers
             return Ok(model);
         }
 
-        [HttpPost("")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(EmployeeCreateRequestModel model)
         {
             var result = await _employeeService.Add(model);
             return Ok(result);
+        }
+
+        [HttpPut("update")]
+        public async Task Update(EmployeeUpdateRequestModel model)
+        {
+            await _employeeService.Update(model);
+        }
+
+        [HttpDelete("delete")]
+        public async Task Delete([FromQuery(Name = "id")] long Id)
+        {
+            await _employeeService.Delete(Id);
         }
     }
 }

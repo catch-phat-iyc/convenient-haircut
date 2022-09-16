@@ -12,9 +12,9 @@
                 <div class="col-sm-6">
                     <h3>Tạo nhân viên</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Users</li>
-                        <li class="breadcrumb-item active">Edit Profile</li>
+                        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                        <li class="breadcrumb-item">Danh sách nhân viên</li>
+                        <li class="breadcrumb-item active">Chi tiết nhân viên</li>
                     </ol>
                 </div>
                 <div class="col-sm-6">
@@ -42,141 +42,201 @@
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
-        <div class="edit-profile">
+        <form id="modal_update_employee">
             <div class="row">
-                <div class="col-xl-8">
-                    <form class="card" id="modal_update_employee">
-                        <div class="card-header pb-0">
-                            <h4 class="card-title mb-0">Thông tin cá nhân: @ViewBag.Test11</h4>
-                            <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
-                        </div>
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-md-6">
-                              <div class="mb-3">
-                                <label class="form-label">Họ tên</label>
-                                <input class="form-control" type="text" placeholder="Họ tên" name="FullName" value="@Model.FullName" />
-                              </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3">
-                              <div class="mb-3">
-                                <label class="form-label">Giới tính</label>
-                                @await Component.InvokeAsync("GenderOption", new {gender = Model.Gender})
-                              </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3">
-                              <div class="mb-3">
-                                <label class="form-label">Ngày sinh</label>
-                                <input class="form-control digits" type="date" name="Birthday" value="@Model.Birthday">
-                              </div>
-                            </div>
-                            <div class="col-sm-12">
-                              <div class="mb-3">
-                                <label class="form-label">Địa chỉ</label>
-                                <input class="form-control" type="text" placeholder="Địa chỉ" name="Address" value="@Model.Address">
-                              </div>
-                            </div>
-                            <div class="col-md-12">
-                              <div class="mb-3">
-                                <label class="form-label">Số điện thoại</label>
-                                <input class="form-control" type="text" placeholder="Số điện thoại" name="Phone" value="@Model.Phone">
-                              </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="mb-3">
-                                <label class="form-label">Vị trí</label>
-                                @await Component.InvokeAsync("PositionOption", new {id = Model.Id})
-                              </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3">
-                              <div class="mb-3">
-                                <label class="form-label">Ngày bắt đầu</label>
-                                <input class="form-control digits" type="date" name="StartingDate" value="@Model.StartingDate">
-                              </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3">
-                              <div class="mb-3">
-                                <label class="form-label">Ngày kết thúc</label>
-                                <input class="form-control digits" type="date" value="@Model.EndingDate">
-                              </div>
-                            </div>                       
-                            <div class="col-md-12">
-                              <div>
-                                <label class="form-label">Ghi chú</label>
-                                <textarea class="form-control" rows="5" placeholder="Ghi chú" name="Note">@Model.Note</textarea>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card-footer text-end">
-                            <button class="btn btn-primary" type="submit">Lưu</button>
-                            <button class="btn btn-danger" type="reset">Hủy bỏ</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-xl-4">
+                <div class="col-sm-8">
                     <div class="card">
                         <div class="card-header pb-0">
-                            <h4 class="card-title mb-0">My Profile</h4>
+                            <h4 class="card-title mb-0">Thông tin cá nhân</h4>
                             <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
                         </div>
                         <div class="card-body">
-                            <form>
-                                <div class="row mb-2">
-                                    <div class="profile-title">
-                                        <div class="media">
-                                            <img class="img-70 rounded-circle" alt="" src="@Model.Avatar" />
-                                            <div class="media-body">
-                                                <h3 class="mb-1 f-20 txt-primary">@Model.FullName</h3>
-                                                <p class="f-12">DESIGNER</p>
-                                            </div>
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-6 d-none">
+                                    <div class="mb-3">
+                                        <input class="form-control" type="text" name="Id" value="@Model.Id" />
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <h6 class="form-label">Bio</h6>
-                                    <textarea class="form-control" rows="5">On the other hand, we denounce with righteous indignation</textarea>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Họ tên</label>
+                                        <input class="form-control" type="text" placeholder="Họ tên" name="FullName" value="@Model.FullName" required />
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Tên tài khoản</label>
-                                    <input class="form-control" placeholder="your-email@domain.com" value="@Model.Username">
+                                <div class="col-sm-6 col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Giới tính</label>
+                                        @await Component.InvokeAsync("GenderOption", new {gender = @Model.Gender})
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Mật khẩu</label>
-                                    <input class="form-control" type="password" value="@Model.Password.Trim()">
+                                <div class="col-sm-6 col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày sinh</label>
+                                        <input class="datepicker-here form-control digits"
+                                               data-language="en" type="text"
+                                               data-multiple-dates-separator=", "
+                                               data-position="top right"
+                                               value="@Model.Birthday.FormatDate()"
+                                               name="Birthday"
+                                               data-date-format="dd/mm/yyyy">
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Website</label>
-                                    <input class="form-control" placeholder="http://Uplor .com">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên tài khoản</label>
+                                        <input class="form-control" type="text" name="Username" value="@Model.Username.Trim()" disabled required>
+                                    </div>
                                 </div>
-                                <div class="form-footer">
-                                    <button class="btn btn-primary btn-block">Lưu</button>
+                                <div class="col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Địa chỉ</label>
+                                        <input class="form-control" type="text" placeholder="Địa chỉ" name="Address" value="@Model.Address" required>
+                                    </div>
                                 </div>
-                            </form>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Số điện thoại</label>
+                                        <input class="form-control" type="text" placeholder="Số điện thoại" name="Phone" value="@Model.Phone" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Vị trí</label>
+                                        @await Component.InvokeAsync("PositionOption", new {id = @Model.Id})
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày bắt đầu</label>
+                                        <input class="datepicker-here form-control digits"
+                                               data-language="en" type="text"
+                                               data-multiple-dates-separator=", "
+                                               data-position="top right"
+                                               data-date-format="dd/mm/yyyy"
+                                               name="StartingDate"
+                                               value="@Model.StartingDate.FormatDate()"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày kết thúc</label>
+                                        <input class="datepicker-here form-control digits"
+                                               data-language="en" type="text"
+                                               data-multiple-dates-separator=", "
+                                               data-position="top right"
+                                               name="EndingDate"
+                                               value="@Model.EndingDate.FormatDate()"
+                                               data-date-format="dd/mm/yyyy">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div>
+                                        <label class="form-label">Ghi chú</label>
+                                        <textarea class="form-control" rows="5" placeholder="Ghi chú" name="Note">@Model.Note</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <button class="btn btn-primary" type="submit" id="@Model.Id">Lưu</button>
+                            <button class="btn btn-danger" type="reset">Hủy bỏ</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header pb-0">
+                            <h5>Ảnh đại diện</h5><span>Siuuu <code class="text-danger">novalidate</code> boolean attribute to your <code class="text-danger">&lt;form&gt;</code>. This disables the browser default feedback tooltips, but still provides access to the form validation APIs in JavaScript. Try to submit the form below; our JavaScript will intercept the submit button and relay feedback to you.</span><span>When attempting to submit, you’ll see the <code class="text-danger">:invalid </code> and <code class="text-danger">:valid </code> styles applied to your form controls.</span>
+                        </div>
+                        <div class="card-body">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
     <!-- Container-fluid Ends-->
 </div>
 
+
 @section Scripts
 {
+    <script src="~/custom/js/moment.min.js"></script>
     <script src="~/assets/js/select2/select2.full.min.js"></script>
+    <script src="~/assets/js/datepicker/date-picker/datepicker.js"></script>
+    <script src="~/assets/js/datepicker/date-picker/datepicker.en.js"></script>
+    <script src="~/assets/js/datepicker/date-picker/datepicker.custom.js"></script>
+    
     <script>
         $(function() {
+            const form1 = $('#modal_update_employee');
 
-            $(".js-example-placeholder-multiple").select2({
-                placeholder: "--Chọn vị trí--",
-            });  
+            Array.prototype.filter.call(form1, function(form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    form.classList.add('was-validated');
+                    var result = form.querySelectorAll(':valid');
+                    for (var item of result) {
+                        var msg = $(item).data("msg-required-1");
+                        $(item).next("label").removeAttr("class").addClass("valid-feedback").html(msg);
+                    }
+
+                    if (form.checkValidity() === true) {
+                        var formData = new FormData();
+
+                        var otherData = $(form).serializeArray();
+                        $.each(otherData || [],
+                            function(key, item) {
+                                formData.append(item.name, item.value);
+                            });
+
+                        var object = {};
+
+                        formData.forEach((value, key) => { 
+                            if (key == "Id") {
+                                object[key] = parseInt(value);
+                            }
+                            else if (key == "Birthday" || key == "StartingDate" || key == "EndingDate") {
+                                var timezone = ((new Date().getTimezoneOffset()) / 60) * -1;
+                                object[key] = moment(value, "DD/MM/YYYY").add(timezone, 'hour');
+                            }
+                            else {
+                                object[key] = value
+                            }
+                        });
+
+                        object["IdRule"] = $(form).find(".select2-rule-multiple").select2("val");
+
+                        $.ajax({
+                            url: '@Url.Action("Update", "EmployeeApi")',
+                            type: "PUT",
+                            data: JSON.stringify(object),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                window.location.reload();
+                            },
+                            error: function(response) {
+                                alert(response.responseJSON.message);
+                            }
+                        });
+                    } else {
+                        var list = form.querySelectorAll(':invalid');
+                        for (var item of list) {
+                            var msg = $(item).data("msg-required");
+                            $(item).next("label").removeAttr("class").addClass("invalid-feedback").html(msg);
+                        }
+                    }
+                }, false);
+            });
         });
     </script>
 }
 
-@section Head{
+    @section Head{
     <link rel="stylesheet" type="text/css" href="~/assets/css/select2.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/date-picker.css">
+
     <style>
         .select2-selection__rendered{
             padding-left: 5px !important;

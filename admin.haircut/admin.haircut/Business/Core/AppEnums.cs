@@ -45,16 +45,7 @@ namespace Admin.Haircut.Business.Core
             [Description("404 - Dữ liệu không tồn tại.")] DataNotFound,
             [Description("405 - Bạn không có quyền.")] MethodNotAllowed,
         }
-
-        public enum Position
-        {
-            [Description("Quản lý salon")] Manager,
-            [Description("Stylist - thợ cắt")] Clipper,
-            [Description("Skinner - thợ gội")] Hairdresser,
-            [Description("Lễ tân")] Receptionist,
-            [Description("Bảo vệ salon")] SecurityGuard,
-            [Description("Kế toán")] Accounting,
-        }
+       
         public enum RoomStatus
         {
             [Description("Empty")] Empty = 0,
