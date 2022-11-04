@@ -1,0 +1,25 @@
+﻿@using Admin.Haircut.Business.Core
+@using Admin.Haircut.Business.Models.Rule
+@model List<RuleModel>;
+@{
+    var ruleEmployee = (List<RuleResponse>)ViewBag.RuleEmployee;
+}
+
+<select class="select2-rule-multiple col-sm-12" multiple="multiple" required>
+    @foreach (var item in Model)
+    {
+        if(ruleEmployee.Any(x => x.IdRule == item.Id)){
+            <option value="@item.Id" selected>@item.FullName</option>
+        }else{
+            <option value="@item.Id">@item.FullName</option>
+        }
+    }
+</select>
+
+<script>
+    $(function() {
+        $(".select2-rule-multiple").select2({
+            placeholder: "--Chọn vị trí--",
+        });
+    })
+</script>
