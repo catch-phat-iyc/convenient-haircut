@@ -1,6 +1,7 @@
 using Admin.Haircut.Business.Core;
 using Admin.Haircut.Business.Service;
 using Admin.Haircut.Business.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -30,6 +31,8 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IRuleService, RuleService>();
 #endregion
+
+builder.Services.AddSession();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -83,6 +86,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 );
 #endregion
 
+builder.Services.AddAuthorization();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(option =>
+{
+    option.LoginPath = new PathString("/login");
+    option.LogoutPath = new PathString("/login/logout");
+    option.AccessDeniedPath = new PathString("/error/access-denied");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -97,11 +110,14 @@ else
     app.UseHsts();
 }
 
+app.UseSession();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

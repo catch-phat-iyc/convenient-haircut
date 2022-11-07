@@ -52,6 +52,13 @@ namespace Admin.Haircut.Business.Core
             [Description("CheckOut")] Full = 1,
             [Description("Maintenance")] Maintenance = 2
         }
+        public enum Status
+        {
+            [Description("InActive")] InActive = 0,
+            [Description("Active")] Active = 1,
+            [Description("Lock")] Lock = 2,
+        }
+
 
         public enum Gender
         {

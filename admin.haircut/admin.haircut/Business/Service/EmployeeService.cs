@@ -20,18 +20,21 @@ namespace Admin.Haircut.Business.Service
             try
             {
                 string query = @"select* from[Employee]
+                                where [IsDelete] = @IsDelete 
                                 order by [Status] ASC
                                 OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
 
                 var data = (await connection.QueryAsync<EmployeeModel>(query, new
                 {
+                    IsDelete = false,
                     Skip = skip,
                     Take = take
                 })).ToImmutableList();
 
                 return new PagingResult<EmployeeModel>(data, total, request);
 
-            } finally
+            }
+            finally
             {
                 await connection.CloseAsync();
             }
@@ -61,8 +64,8 @@ namespace Admin.Haircut.Business.Service
             {
                 #region Check username exist
 
-                string query = $@"select * from[Employee]
-                                  where [Employee].[Username] = @Username";
+                string query = @$"SELECT * FROM[Employee]
+                                  WHERE [Employee].[Username] = @Username";
                 var checkname = await sqlConnection.QueryFirstOrDefaultAsync<EmployeeCreateRequestModel>(query, new
                 {
                     Username = model.Username
@@ -77,10 +80,10 @@ namespace Admin.Haircut.Business.Service
 
                 #region Insert new employee
 
-                query = $@"INSERT INTO [Employee] 
-                          ([FullName], [Username],[Password])
+                query = @$"INSERT INTO [Employee] 
+                          ([FullName], [Username],[Password], [DateCreate], [IsDelete], [UserCreate], [Status])
                             VALUES 
-                          (@Fullname, @Username, @Password);
+                          (@Fullname, @Username, @Password, @DateCreate, @IsDelete, @UserCreate, @Status);
 
                             SELECT SCOPE_IDENTITY();";
 
@@ -88,10 +91,15 @@ namespace Admin.Haircut.Business.Service
                 {
                     FullName = model.FullName.Trim(),
                     Username = model.Username.Trim().ToLower(),
-                    Password = model.Password,
+                    Password = model.Password.CreateMD5(),
+                    DateCreate = DateTime.Now,
+                    IsDelete = false,
+                    UserCreate = 0,
+                    Status = AppEnums.Status.Active
                 });
 
                 return result;
+
                 #endregion
             }
             finally
@@ -107,7 +115,7 @@ namespace Admin.Haircut.Business.Service
             {
                 #region get data of employee
 
-                string query = $@"SELECT * FROM [Employee] where [Id] = @Id";
+                string query = @$"SELECT * FROM [Employee] where [Id] = @Id";
 
                 var result = await sqlConnection.QueryFirstOrDefaultAsync<EmployeeInfoResponse>(query, new
                 {
@@ -131,7 +139,10 @@ namespace Admin.Haircut.Business.Service
             {
                 throw new AppException("Dữ liệu không được tìm thấy!");
             }
+
             await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+            await sqlConnection.OpenAsync();
+            await using var transaction = await sqlConnection.BeginTransactionAsync();
             try
             {
                 #region update employee info
@@ -151,33 +162,68 @@ namespace Admin.Haircut.Business.Service
                 {
                     FullName = model.FullName,
                     Birthday = model.Birthday,
-                    Address = model.Address,
-                    Phone = model.Phone,
+                    Address = model.Address.Trim(),
+                    Phone = model.Phone.Trim(),
                     StartingDate = model.StartingDate,
                     EndingDate = model.EndingDate,
                     Gender = model.Gender,
-                    Note = model.Note,
+                    Note = model.Note.Trim(),
                     Id = model.Id
                     //IssueDate = model.IssueDate.ToLocalTime(),
                     //IssueBy = model.IssueBy
-                });
+                }, transaction);
                 #endregion
+
+                #region Delete [Employee_Rulee] and Insert [Employee_Rule]
+
+                query = @$"DELETE FROM [Employee_Rule]
+                                  where [Employee_Rule].[IdEmployee] = @IdEmployee";
+
+                var queryIdRule = await sqlConnection.ExecuteAsync(query, new
+                {
+                    IdEmployee = model.Id
+                }, transaction);
+
+                foreach (var item in model.IdRule)
+                {
+                    query = @$"INSERT INTO [Employee_Rule]([IdRule],[IdEmployee]) VALUES
+                                        (@IdRule, @IdEmployee)";
+
+                    await sqlConnection.ExecuteAsync(query, new
+                    {
+                        IdRule = item,
+                        IdEmployee = model.Id
+                    }, transaction);
+                }
+
+                #endregion
+
+                transaction.Commit();
+            }
+            catch(Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new AppException(ex.Message);
             }
             finally
             {
                 await sqlConnection.CloseAsync();
             }
         }
+
         public async Task Delete(long Id)
         {
             await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
             try
             {
-                string query = @$"DELETE FROM [Employee]
+                string query = @$"UPDATE [Employee] SET [IsDelete] = @IsDelete, [Status] = @Status, [DeletedTime] = @DeletedTime
                                  WHERE [Id] = @Id";
                 await sqlConnection.ExecuteAsync(query, new
                 {
-                    Id = Id
+                    Id = Id,
+                    IsDelete = true,
+                    Status = AppEnums.Status.Lock,
+                    DeletedTime = DateTime.Now,
                 });
             }
             finally
@@ -185,5 +231,71 @@ namespace Admin.Haircut.Business.Service
                 await sqlConnection.CloseAsync();
             }
         }
+
+        public async Task<EmployeeModel> Login(EmployeeLoginRequestModel model)
+        {
+            await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+            try
+            {
+                string query = @$"SELECT * FROM [Employee]
+                                 WHERE [Username] = @Username and [Password] = @Password and [IsDelete] = @IsDelete and [Status] = Status";
+
+                //string? encodepassword;
+
+                //if(model.Password != null)
+                //{
+                //    encodepassword = CheckValidPassword(model.UserName.Trim()).ToString();                    
+                //}
+
+                var result = await sqlConnection.QueryFirstOrDefaultAsync<EmployeeModel>(query, new
+                {
+                    Username = model.UserName.Trim(),
+                    Password = model.Password.CreateMD5(),
+                    IsDelete = false,
+                    Status = AppEnums.Status.Active
+                });
+
+                if(result == null)
+                {
+                    throw new AppException("Dữ liệu không được tìm thấy!");
+                }
+
+                if(result.Status == AppEnums.Status.Lock)
+                {
+                    throw new AppException("Tài khoản đã bị khóa!");
+                }
+
+                return result;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+        }
+
+
+        //Update status when log in account to system
+        // 0 - InActive , 1 - Active , 2 - Lock
+        //public async Task<AppEnums.Status> UpdateStatusAccount(string Username)
+        //{
+        //    await using var sqlConnection = new SqlConnection(Configurations.ConnectionStrings.DefaultConnection);
+
+        //    try
+        //    {
+        //        string query = $@"UPDATE [Employee] SET 
+        //                            [Status] = @Status
+        //                        WHERE [Username] = @Username";
+        //        var result = await sqlConnection.ExecuteScalarAsync<AppEnums.Status>(query, new
+        //        {
+        //            Username = Username,
+        //            Status = AppEnums.Status.InActive
+        //        });
+        //        return result;
+        //    }
+        //    finally
+        //    {
+        //        await sqlConnection.CloseAsync();
+        //    }
+        //}
     }
 }

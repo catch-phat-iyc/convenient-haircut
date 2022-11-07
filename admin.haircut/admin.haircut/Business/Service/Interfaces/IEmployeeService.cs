@@ -16,5 +16,6 @@ namespace Admin.Haircut.Business.Service.Interfaces
         Task<EmployeeInfoResponse> Get(long id);
         Task Update(EmployeeUpdateRequestModel model);
         Task Delete(long Id);
+        Task<EmployeeModel> Login(EmployeeLoginRequestModel model);
     }
 }

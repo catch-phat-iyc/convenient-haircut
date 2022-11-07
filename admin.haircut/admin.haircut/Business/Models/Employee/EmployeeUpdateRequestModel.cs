@@ -13,7 +13,10 @@ namespace Admin.Haircut.Business.Models.Employee
         public DateTime? EndingDate { get; set; }
         public string? Note { get; set; }
         public AppEnums.Gender Gender { get; set; }
-        //foreign key
+
+        //Employee_Rule Table
         public List<long>? IdRule { get; set; }
+        public int Status { get; set; }
+        public string? NoteEmployeeRule { get; set; }
     }
 }
