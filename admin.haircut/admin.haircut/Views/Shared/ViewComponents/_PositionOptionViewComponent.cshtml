@@ -5,7 +5,7 @@
     var ruleEmployee = (List<RuleResponse>)ViewBag.RuleEmployee;
 }
 
-<select class="select2-rule-multiple col-sm-12" multiple="multiple" required>
+<select class="select2-rule-multiple col-sm-12" multiple="multiple" name="Rule" required>
     @foreach (var item in Model)
     {
         if(ruleEmployee.Any(x => x.IdRule == item.Id)){

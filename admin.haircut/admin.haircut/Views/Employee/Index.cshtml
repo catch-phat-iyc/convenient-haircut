@@ -9,11 +9,10 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3>Sample Page</h3>
+                    <h3>Danh sách nhân viên</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Pages</li>
-                        <li class="breadcrumb-item active">Sample Page</li>
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Trang chủ</a></li>
+                        <li class="breadcrumb-item">Danh sách</li>
                     </ol>
                 </div>
                 <div class="col-sm-6">
@@ -67,13 +66,12 @@
                                                         <div class="col">
                                                             <div class="mb-3">
                                                                 <label class="form-label" for="exampleFormControlInput1">Họ tên</label>
-                                                                <input class="form-control" 
-                                                                    name="FullName" type="text" 
-                                                                    placeholder="Nhập họ tên" 
-                                                                    data-msg-required="Họ tên không được để trống!" 
-                                                                    data-msg-required-1="Họ tên hợp lệ" 
-                                                                    required
-                                                                >
+                                                                <input class="form-control"
+                                                                       name="FullName" type="text"
+                                                                       placeholder="Nhập họ tên"
+                                                                       data-msg-required="Họ tên không được để trống!"
+                                                                       data-msg-required-1="Họ tên hợp lệ"
+                                                                       required>
                                                                 <label></label>
                                                             </div>
                                                         </div>
@@ -82,14 +80,13 @@
                                                         <div class="col">
                                                             <div class="mb-3">
                                                                 <label class="form-label" for="exampleFormControlInput1">Tên tài khoản</label>
-                                                                <input class="form-control" 
-                                                                    name="Username" type="text" 
-                                                                    placeholder="Nhập tên tài khoản" 
-                                                                    minlength="5" maxlength="10" 
-                                                                    data-msg-required="Tên tài khoản không được để trống!" 
-                                                                    data-msg-required-1="Tài khoản hợp lệ" 
-                                                                    required
-                                                                >
+                                                                <input class="form-control"
+                                                                       name="Username" type="text"
+                                                                       placeholder="Nhập tên tài khoản"
+                                                                       minlength="5" maxlength="20"
+                                                                       data-msg-required="Tên tài khoản không được để trống!"
+                                                                       data-msg-required-1="Tài khoản hợp lệ"
+                                                                       required>
                                                                 <label></label>
                                                             </div>
                                                         </div>
@@ -98,13 +95,12 @@
                                                         <div class="col">
                                                             <div class="mb-3">
                                                                 <label class="form-label" for="exampleInputPassword2">Mật khẩu</label>
-                                                                <input class="form-control" 
-                                                                    name="Password" type="password" 
-                                                                    placeholder="Nhập mật khẩu" 
-                                                                    data-msg-required="Mật khẩu không được để trống!" 
-                                                                    data-msg-required-1="Mật khẩu hợp lệ" 
-                                                                    required
-                                                                >
+                                                                <input class="form-control"
+                                                                       name="Password" type="password"
+                                                                       placeholder="Nhập mật khẩu"
+                                                                       data-msg-required="Mật khẩu không được để trống!"
+                                                                       data-msg-required-1="Mật khẩu hợp lệ"
+                                                                       required>
                                                                 <label></label>
                                                             </div>
                                                         </div>
@@ -140,19 +136,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Items.Select((value, i) => ( value, i )))
+                                @foreach (var item in Model.Items)
                                 {
                                     <tr>
-                                        <td>@item.value.Id</td>
-                                        <td>@item.value.FullName</td>
-                                        <td>@item.value.Gender</td>
-                                        <td>@item.value.Birthday.FormatDate()</td>
-                                        <td>@item.value.Phone</td>
-                                        <td>@item.value.StartingDate.FormatDate()</td>
-                                        <td>@item.value.Username</td>
+                                        <td>@item.Id</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Gender.GetDescription()</td>
+                                        <td>@item.Birthday.FormatDate()</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.StartingDate.FormatDate()</td>
+                                        <td>@item.Username</td>
                                         <td>
-                                            <a class="btn btn-iconsolid" asp-controller="Employee" asp-action="Detail" asp-route-id="@item.value.Id"><i class="fa fa-user-o"></i></a>                           
-                                            <button class="btn btn-iconsolid bg-danger" onclick="deleteEmployee(this, @item.value.Id)"><i class="fa fa-trash-o"></i></button>
+                                            <a class="btn btn-iconsolid" asp-controller="Employee" asp-action="Detail" asp-route-id="@item.Id"><i class="fa fa-user-o"></i></a>
+                                            <button class="btn btn-iconsolid bg-danger" onclick="deleteEmployee(this, @item.Id)"><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -171,20 +167,33 @@
     <script>
         function deleteEmployee(e, id) {
 
-                var tr = $(e).closest("tr");
+            var tr = $(e).closest("tr");
 
-                $.ajax({
-                    url: '@Url.Action("Delete", "EmployeeApi")?id=' + id,
-                    type: "DELETE",
-                    contentType: 'application/json',
-                    success: function(response) {
-                        tr.remove();
-                    },
-                    error: function(response) {
-                        alert(response.responseJSON.message);
-                    }
-                });
-            }    
+            Swal.fire({
+                title: 'Bạn có chắc chắn xóa?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, chắc chắn',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "EmployeeApi")?id=' + id,
+                        type: "DELETE",
+                        contentType: 'application/json',
+                        success: function(response) {
+                            tr.remove();
+                        },
+                        error: function(response) {
+                            alert(response.responseJSON.message);
+                        }
+                    });
+                }
+            })
+        }
     </script>
     <script>
         $(function() {
@@ -219,7 +228,7 @@
                             type: "POST",
                             data: JSON.stringify(object),
                             contentType: 'application/json',
-                            success: function(response) {
+                            succes: function(response) {
                                 alert(response);
                                 window.location.href = '@Url.Action("Add", "Employee")';
                             },
@@ -240,21 +249,23 @@
     </script>
 }
 
-@section Head{
+    @section Head{
     <style>
         .a-link:link, .a-link:visited {
-          background-color: white;
-          width: 30px;
-          height: 32px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          border-radius: 5px;
-          padding-top: 4px;
+            background-color: white;
+            width: 30px;
+            height: 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+            padding-top: 4px;
         }
+
         .a-link:hover, .a-link:active {
-          background-color: gainsboro
+            background-color: gainsboro
         }
+
         .btn-delete-user:link, .btn-delete-user:visited {
             background-color: white;
             width: 30px;
@@ -265,7 +276,8 @@
             border-radius: 5px;
             padding-top: 4px;
         }
-        .btn-delete-user:hover, .btn-delete-user:active{
+
+        .btn-delete-user:hover, .btn-delete-user:active {
             background-color: gainsboro
         }
     </style>

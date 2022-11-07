@@ -12,8 +12,8 @@
                 <div class="col-sm-6">
                     <h3>Tạo nhân viên</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
-                        <li class="breadcrumb-item">Danh sách nhân viên</li>
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Trang chủ</a></li>
+                        <li class="breadcrumb-item">Danh sách</li>
                         <li class="breadcrumb-item active">Chi tiết nhân viên</li>
                     </ol>
                 </div>
@@ -42,7 +42,7 @@
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
-        <form id="modal_update_employee">
+        <form id="modal_update_employee" novalidate>
             <div class="row">
                 <div class="col-sm-8">
                     <div class="card">
@@ -60,7 +60,13 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Họ tên</label>
-                                        <input class="form-control" type="text" placeholder="Họ tên" name="FullName" value="@Model.FullName" required />
+                                        <input class="form-control" 
+                                                type="text" 
+                                                placeholder="Họ tên" 
+                                                name="FullName" 
+                                                value="@Model.FullName"
+                                                required 
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-3">
@@ -84,19 +90,29 @@
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">Tên tài khoản</label>
-                                        <input class="form-control" type="text" name="Username" value="@Model.Username.Trim()" disabled required>
+                                        <input class="form-control" type="text" name="Username" value="@Model.Username.Trim()" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="mb-3">
                                         <label class="form-label">Địa chỉ</label>
-                                        <input class="form-control" type="text" placeholder="Địa chỉ" name="Address" value="@Model.Address" required>
+                                        <input class="form-control" 
+                                                type="text" 
+                                                placeholder="Địa chỉ" 
+                                                name="Address" 
+                                                value="@Model.Address" 
+                                                required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">Số điện thoại</label>
-                                        <input class="form-control" type="text" placeholder="Số điện thoại" name="Phone" value="@Model.Phone" required>
+                                        <input class="form-control" 
+                                                type="text" 
+                                                placeholder="Số điện thoại" 
+                                                name="Phone" 
+                                                value="@Model.Phone" 
+                                                required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -174,13 +190,10 @@
 
             Array.prototype.filter.call(form1, function(form) {
                 form.addEventListener('submit', function(event) {
-                    event.preventDefault();
+                    event.preventDefault();                   
+
                     form.classList.add('was-validated');
-                    var result = form.querySelectorAll(':valid');
-                    for (var item of result) {
-                        var msg = $(item).data("msg-required-1");
-                        $(item).next("label").removeAttr("class").addClass("valid-feedback").html(msg);
-                    }
+
 
                     if (form.checkValidity() === true) {
                         var formData = new FormData();
@@ -214,18 +227,62 @@
                             data: JSON.stringify(object),
                             contentType: 'application/json',
                             success: function(response) {
-                                window.location.reload();
+                                const Toast = Swal.mixin({
+                                  toast: true,
+                                  position: 'top-end',
+                                  showConfirmButton: false,
+                                  timer: 2000,
+                                  timerProgressBar: true,
+                                  didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                  }
+                                })
+
+                                Toast.fire({
+                                  icon: 'success',
+                                  title: 'Cập nhật thành công!'
+                                })
+                                //$.toast({
+                                //    heading: 'Trạng thái',
+                                //    text: 'Cập nhật thành công',
+                                //    showHideTransition: 'fade',
+                                //    hideAfter: 1000,
+                                //    icon: 'success',
+                                //    loader: true,        // Change it to false to disable loader
+                                //    loaderBg: '#9EC600',  // To change the background
+                                //})
+                                //window.location.reload();
                             },
                             error: function(response) {
-                                alert(response.responseJSON.message);
+                                //$.toast({
+                                //    heading: 'Trạng thái',
+                                //    text: 'Cập nhật không thành công',  //response.responseJSON.message
+                                //    showHideTransition: 'fade',
+                                //    icon: 'error',
+                                //    loader: true,        // Change it to false to disable loader
+                                //    loaderBg: '#ff0011'  
+                                //})
+                                const Toast = Swal.mixin({
+                                  toast: true,
+                                  position: 'top-end',
+                                  showConfirmButton: false,
+                                  timer: 2000,
+                                  timerProgressBar: true,
+                                  didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                  }
+                                })
+
+                                Toast.fire({
+                                  icon: 'error',
+                                  title: 'Có lỗi gì đó đã xảy ra!'
+                                })
                             }
                         });
                     } else {
-                        var list = form.querySelectorAll(':invalid');
-                        for (var item of list) {
-                            var msg = $(item).data("msg-required");
-                            $(item).next("label").removeAttr("class").addClass("invalid-feedback").html(msg);
-                        }
+                        
                     }
                 }, false);
             });
